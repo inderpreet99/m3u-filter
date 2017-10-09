@@ -2,10 +2,11 @@
 
 var rp = require('request-promise');
 var parser = require('parser');
+var filter = require('filter');
 
 exports.handler = function (event, context) {
     var url = event.queryStringParameters.url,
-        filter = event.queryStringParameters.hasOwnProperty('filter') ? true : false;
+        has_remove_groups = event.queryStringParameters.hasOwnProperty('remove-groups') ? true : false;
 
     rp({
         uri: url,
@@ -21,6 +22,10 @@ exports.handler = function (event, context) {
             playlist_str;
 
         playlist = parser.parse(response);
+        if (has_remove_groups) {
+            playlist = filter.removeGroups(playlist, event.queryStringParameters['remove-groups']);
+        }
+
         playlist_str = parser.exportToString(playlist);
 
         output = {
