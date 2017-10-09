@@ -1,6 +1,7 @@
 'use strict';
 
 var rp = require('request-promise');
+var parser = require('parser');
 
 exports.handler = function (event, context) {
     var url = event.queryStringParameters.url,
@@ -15,10 +16,17 @@ exports.handler = function (event, context) {
     }).then(function (response) {
         // console.log(response);
 
-        var output = {
+        var output,
+            playlist,
+            playlist_str;
+
+        playlist = parser.parse(response);
+        playlist_str = parser.exportToString(playlist);
+
+        output = {
             "statusCode": 200,
             "headers": { 'Content-Type': 'text/html' },
-            "body": body
+            "body": playlist_str
         };
 
         context.succeed(output);
