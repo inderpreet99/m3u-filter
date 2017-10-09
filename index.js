@@ -1,19 +1,19 @@
 'use strict';
 
-var request = require('request');
+var rp = require('request-promise');
 
 exports.handler = function (event, context) {
     var url = event.queryStringParameters.url,
         filter = event.queryStringParameters.hasOwnProperty('filter') ? true : false;
 
-    request({
+    rp({
         uri: url,
         method: "GET",
         timeout: 10000,
         followRedirect: true,
         maxRedirects: 10
-    }, function (error, response, body) {
-        console.log('Success, with: ' + response.statusCode);
+    }).then(function (response) {
+        // console.log(response);
 
         var output = {
             "statusCode": 200,
@@ -24,5 +24,8 @@ exports.handler = function (event, context) {
         context.succeed(output);
         context.done(null);
 
+    }).catch(function (err) {
+        console.log(err);
+        context.done(err);
     });
 };
