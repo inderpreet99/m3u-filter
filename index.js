@@ -6,7 +6,8 @@ var filter = require('filter');
 
 exports.handler = function (event, context) {
     var url = event.queryStringParameters.url,
-        has_remove_groups = event.queryStringParameters.hasOwnProperty('remove-groups') ? true : false;
+        has_remove_groups = event.queryStringParameters.hasOwnProperty('remove-groups') ? true : false,
+        has_parental_contols = event.queryStringParameters.hasOwnProperty('parental-groups') ? true : false;
 
     rp({
         uri: url,
@@ -24,6 +25,9 @@ exports.handler = function (event, context) {
         playlist = parser.parse(response);
         if (has_remove_groups) {
             playlist = filter.removeGroups(playlist, event.queryStringParameters['remove-groups']);
+        }
+        if (has_parental_contols) {
+            playlist = filter.addParentalControls(playlist, event.queryStringParameters['parental-groups'], event.queryStringParameters['parental-code']);
         }
 
         playlist_str = parser.exportToString(playlist);

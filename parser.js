@@ -10,6 +10,7 @@ module.exports = {
             logo,
             group,
             url,
+            parent_code,
             i;
 
         playlist_arr.shift(); // Remove #EXTM3U line
@@ -30,6 +31,9 @@ module.exports = {
                     group = line.match(/group-title\="(.*?)"/i);
                     group = (group == null) ? '' : group[1];
 
+                    parent_code = line.match(/parent-code\="(.*?)"/i);
+                    parent_code = (parent_code == null) ? '' : parent_code[1];
+
                     break;
                 case 1:
                     url = line;
@@ -39,6 +43,7 @@ module.exports = {
                             orig: name,
                             name: name,
                             logo: logo,
+                            parent_code: parent_code,
                             url: url,
                             group: group
                         });
@@ -52,7 +57,7 @@ module.exports = {
     exportToString: function(playlist) {
         var playlist_str = "#EXTM3U\n";
         playlist.forEach(function(stream, idx) {
-            playlist_str += '#EXTINF:-1, tvg-id="' + stream.id + '" tvg-name="' + stream.name + '" tvg-logo="' + stream.logo + '" group-title="' + stream.group + '",' + stream.name + '\n';
+            playlist_str += '#EXTINF:-1, tvg-id="' + stream.id + '" tvg-name="' + stream.name + '" tvg-logo="' + stream.logo + '" parent-code="' + stream.parent_code + '" group-title="' + stream.group + '",' + stream.name + '\n';
             playlist_str += stream.url + '\n';
         });
 
