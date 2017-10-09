@@ -1,37 +1,28 @@
 'use strict';
 
-var http = require('http');
+var request = require('request');
 
 exports.handler = function (event, context) {
     var url = event.queryStringParameters.url,
         filter = event.queryStringParameters.hasOwnProperty('filter') ? true : false;
 
-    http.get(url, function (res) {
-        console.log('Success, with: ' + res.statusCode);
+    request({
+        uri: url,
+        method: "GET",
+        timeout: 10000,
+        followRedirect: true,
+        maxRedirects: 10
+    }, function (error, response, body) {
+        console.log('Success, with: ' + response.statusCode);
 
+        var output = {
+            "statusCode": 200,
+            "headers": { 'Content-Type': 'text/html' },
+            "body": body
+        };
 
-        res.setEncoding('utf8');
-        let rawData = '';
-        res.on('data', (chunk) => { rawData += chunk; });
-        res.on('end', () => {
-            try {
+        context.succeed(output);
+        context.done(null);
 
-                const res2 = {
-                    "statusCode": 200,
-                    "headers": { 'Content-Type': 'text/html' },
-                    "body": rawData
-                };
-
-
-                context.succeed(res2);
-                context.done(null);
-            } catch (e) {
-                console.error(e.message);
-            }
-        });
-
-    }).on('error', function (err) {
-        console.log('Error, with: ' + err.message);
-        context.done("Failed");
     });
 };

@@ -1,0 +1,23 @@
+{
+  "name": "m3u-filter",
+  "version": "0.0.1",
+  "description": "Filter m3u playlists.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "m3u",
+    "playlist",
+    "iptv"
+  ],
+  "author": "Inderpreet Singh",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.81.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/inderpreet99/m3u-filter"
+  }
+}
